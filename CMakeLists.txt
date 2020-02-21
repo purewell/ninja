@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)
 project(ninja)
 
+file(STRINGS src/version.cc SRC_VERSION REGEX "^const char.*kNinjaVersion.*")
+string(REGEX REPLACE ".*\"(.*)(\.git?)\".*" "\\1" PROJECT_VERSION ${SRC_VERSION})
+
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DESCRIIPTION_SUMMARY "Ninja is a small build system with a focus on speed.")
+#message(INFO " VERSION=${PROJECT_VERSION}")
+
 if(CMAKE_BUILD_TYPE MATCHES "Release")
 	cmake_policy(SET CMP0069 NEW)
 	include(CheckIPOSupported)
@@ -129,3 +136,5 @@ enable_testing()
 add_test(NinjaTest ninja_test)
 
 install(TARGETS ninja DESTINATION bin)
+
+include(CPack)
